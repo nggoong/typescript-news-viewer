@@ -1,24 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useEffect, useState} from 'react';
 import './App.css';
+import Header from './components/Header';
+import Modal from './components/Modal';
+import NewsContainer from './containers/NewsContainer';
+import { Routes, Route } from 'react-router-dom';
+import Favorite from './components/Favorite';
 
-function App() {
+const App: React.FC = () => {
+  const [modal, setModal] = useState<boolean>(false);
+  
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header modal={modal} setModal={setModal}></Header>
+      {modal ? <Modal setModal={setModal} /> : undefined}
+      <div className="app-contents">
+        <Routes>
+          <Route path="/" element={<NewsContainer />}></Route>
+          <Route path="favorite" element={<Favorite />}/>
+        </Routes>
+
+      </div>
     </div>
   );
 }
