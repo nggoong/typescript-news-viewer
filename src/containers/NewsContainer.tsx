@@ -23,7 +23,7 @@ const NewsContainer: React.FC = () => {
     const dispatch = useDispatch();
     const goButtonTapped = (keyword: string) => {
         dispatch<any>(fetchNewsData(keyword));
-        setIndex(10);
+        setIndex(10)
     }
 
 
@@ -65,8 +65,8 @@ const NewsContainer: React.FC = () => {
             <div className='news-app-wrapper'>
                 <NewsInput goButtonTapped={goButtonTapped}></NewsInput>
                 <div className='news-app-viewer'>
-                    {!newsReducer.articles?.articles.length ? <div className='no-data'><h1>No data😂</h1><h1>Search news by typing keywords!</h1></div>
-                        : <NewsViewer index={index} datas={sortDataByPublished(newsReducer.articles?.articles)}></NewsViewer>}
+                    {!newsReducer.articles.articles ? <div className='no-data'><h1>No data😂</h1><h1>Search news by typing keywords!</h1></div>
+                        : <NewsViewer index={index} datas={sortDataByPublished(newsReducer.articles.articles)}></NewsViewer>}
 
                 </div>
             </div>

@@ -1,6 +1,8 @@
 // 액션 타입 정의
 export const NEWS_SUCCESS = 'NEWS_SUCCESS';
 export const NEWS_FAIL = 'NEWS_FAIL';
+export const ADD_SUCCESS = 'ADD_SUCCESS';
+export const ADD_FAIL = 'ADD_FAIL';
 
 // 받아올 데이터의 모양
 export type ArticleType = {
@@ -38,4 +40,15 @@ export interface newsFailDispatch {
     type: typeof NEWS_FAIL;
 }
 
-export type newsDispatchType = newsSuccessDispatch | newsFailDispatch;
+export interface addSuccessDispatch {
+    type:typeof ADD_SUCCESS;
+    payload: {
+        articles:NewsType[];
+    }
+}
+
+export interface addFailDispatch {
+    type: typeof ADD_FAIL;
+}
+
+export type newsDispatchType = newsSuccessDispatch | newsFailDispatch | addSuccessDispatch | addFailDispatch;
