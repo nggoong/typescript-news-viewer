@@ -18,7 +18,7 @@ const Modal: React.FC<ModalProps> = ({ setModal }) => {
 
     const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (inputs.id === 'alyce' && inputs.password === 'alyce123') {
+        if (inputs.id === 'news' && inputs.password === 'news123') {
             alert('로그인 완료!')
             localStorage.setItem('isLogin', 'true');
             localStorage.setItem('loginId', inputs.id);
