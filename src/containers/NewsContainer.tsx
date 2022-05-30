@@ -1,73 +1,35 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootReducerType } from '../Store';
 import NewsInput from '../components/NewsInput';
 import NewsViewer from '../components/NewsViewer';
-import { fetchNewsData } from '../actions/NewsActions';
-import { NewsType } from '../actions/NewsActionsType';
-
-const sortDataByPublished = (items: NewsType[]) => {
-    let tempData = Array.from(items);
-    tempData = tempData.sort((a: any, b: any) => {
-        return Number(b.publishedAt.slice(0, 10).replace(/-/g, '')) -
-            Number(a.publishedAt.slice(0, 10).replace(/-/g, ''));
-    })
-    return tempData;
-}
-
-
+import { addNewsData, fetchNewsData } from '../actions/NewsActions';
 
 const NewsContainer: React.FC = () => {
-    const [index, setIndex] = useState<number>(10);
+    const [page, setPage] = useState<number>(2);
+    const [keyword, setKeyword] = useState<string>("");
     const newsReducer = useSelector((state: RootReducerType) => state.NewsReducer);
     const dispatch = useDispatch();
+
     const goButtonTapped = (keyword: string) => {
-        dispatch<any>(fetchNewsData(keyword));
-        setIndex(10)
+        dispatch<any>(fetchNewsData(keyword, 1));
+        setKeyword(keyword);
     }
 
-
-    const scrollHandler = () => {
-        let YOffset = window.pageYOffset;
-        let scrollHeight = document.body.scrollHeight;
-        let height = window.innerHeight;
-
-
-        if (YOffset >= (scrollHeight - height) - 10) {
-            setIndex(index => index + 10);
-        }
+    const addHandler = () => {
+        dispatch<any>(addNewsData(keyword, page));
+        setPage(page => page + 1);
     }
 
-    const throttling = () => {
-        let timer;
-        if (!timer) {
-            timer = setTimeout(() => {
-                timer = null;
-                scrollHandler();
-            }, 1000)
-        }
-    }
-
-
-    useEffect(() => {
-        function addScrollEvent() {
-            window.addEventListener('scroll', throttling);
-        }
-        addScrollEvent();
-
-        return (() => {
-            window.removeEventListener('scroll', throttling);
-        })
-    });
 
     return (
         <>
             <div className='news-app-wrapper'>
                 <NewsInput goButtonTapped={goButtonTapped}></NewsInput>
                 <div className='news-app-viewer'>
-                    {!newsReducer.articles.articles ? <div className='no-data'><h1>No data😂</h1><h1>Search news by typing keywords!</h1></div>
-                        : <NewsViewer index={index} datas={sortDataByPublished(newsReducer.articles.articles)}></NewsViewer>}
-
+                    <button onClick={addHandler}>add</button>
+                    {!newsReducer.articles.articles.length ? <div className='no-data'><h1>No data😂</h1><h1>Search news by typing keywords!</h1></div>
+                        : <NewsViewer datas={newsReducer.articles.articles} setPage={setPage}></NewsViewer>}
                 </div>
             </div>
         </>
