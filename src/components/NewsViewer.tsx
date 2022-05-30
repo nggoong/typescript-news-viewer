@@ -1,32 +1,50 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { NewsType } from '../actions/NewsActionsType';
 import NewsItem from './NewsItem';
-import { LocalStar } from '../model'
+import { addNewsData, fetchNewsData } from '../actions/NewsActions';
 
 interface NewsViewerProps {
     datas: NewsType[];
-    index: number;
-    
+    setPage: React.Dispatch<React.SetStateAction<number>>
+    // index: number;
 }
 
 
+const NewsViewer: React.FC<NewsViewerProps> = ({ datas, setPage }) => {
 
+    const [target, setTarget] = useState<any>(null);
 
-const NewsViewer: React.FC<NewsViewerProps> = ({ datas, index }) => {
+    const pageUpByScroll = () => {
+        setPage(page => page + 1);
+    }
 
-    const [items, setItems] = useState<NewsType[]>([]);
-    const [starList, setStarList] = useState<LocalStar[]>([]);
-    
+    const onIntersect = ([entry]: any, observer: any) => {
+        if (entry.isIntersecting) {
+            observer.unobserve(entry.target);
+            pageUpByScroll();
+            observer.observe(entry.target);
+        }
+    }
 
     useEffect(() => {
-        setItems(datas.slice(0, index));
-    }, [datas, index])
+        let observer: any;
+        if (target) {
+            observer = new IntersectionObserver(onIntersect, { threshold: 0.4 });
+            observer.observe(target);
+        }
 
+        return (() => {
+            observer && observer.disconnect();
+        })
+    }, [target])
 
     return (
-        <>
-            {items.map((item, index) => <NewsItem starList={starList} setStarList={setStarList} key={index} item={item} />)}
-        </>
+        <div>
+            {datas.map((item, index) => <NewsItem key={index} item={item} />)}
+            <div ref={setTarget}>
+                End
+            </div>
+        </div>
     )
 }
 

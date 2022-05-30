@@ -14,13 +14,19 @@ const NewsContainer: React.FC = () => {
     const goButtonTapped = (keyword: string) => {
         dispatch<any>(fetchNewsData(keyword, 1));
         setKeyword(keyword);
+        setPage(2);
     }
+
+    useEffect(()=> {
+        dispatch<any>(addNewsData(keyword, page));
+    }, [page])
 
     const addHandler = () => {
         dispatch<any>(addNewsData(keyword, page));
         setPage(page => page + 1);
     }
 
+    
 
     return (
         <>
