@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootReducerType } from '../Store';
 import NewsInput from '../components/NewsInput';
@@ -17,23 +17,17 @@ const NewsContainer: React.FC = () => {
         setPage(2);
     }
 
-    useEffect(()=> {
+    useEffect(() => {
+        if (keyword === "") return;
         dispatch<any>(addNewsData(keyword, page));
     }, [page])
-
-    const addHandler = () => {
-        dispatch<any>(addNewsData(keyword, page));
-        setPage(page => page + 1);
-    }
-
-    
+   
 
     return (
         <>
             <div className='news-app-wrapper'>
                 <NewsInput goButtonTapped={goButtonTapped}></NewsInput>
                 <div className='news-app-viewer'>
-                    <button onClick={addHandler}>add</button>
                     {!newsReducer.articles.articles.length ? <div className='no-data'><h1>No data😂</h1><h1>Search news by typing keywords!</h1></div>
                         : <NewsViewer datas={newsReducer.articles.articles} setPage={setPage}></NewsViewer>}
                 </div>

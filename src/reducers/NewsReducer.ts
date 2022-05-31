@@ -33,13 +33,10 @@ const NewsReducer = (state: InitialState = initialState, action: newsDispatchTyp
             }
 
         case ADD_SUCCESS:
-            console.log(state.articles.articles);
-            console.log(action.payload.articles);
             return {
-                ...state,
                 success: true,
                 articles: {
-                    articles: state.articles.articles.concat(action.payload.articles)
+                    articles: [...state.articles.articles, ...action.payload.articles]
                 }
             }
 
